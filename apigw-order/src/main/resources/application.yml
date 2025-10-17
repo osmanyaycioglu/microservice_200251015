@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: apigw-order
+  config:
+    import: configserver:http://127.0.0.1:8888
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: orderRoute
+              uri: lb://MS-ORDER
+              predicates:
+                - Path=/abc/api/v1/order/**
+              filters:
+                - RewritePath=/abc/?(?<segment>.*), /$\{segment}

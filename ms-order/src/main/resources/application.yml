@@ -1,0 +1,69 @@
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+server:
+  error:
+    include-binding-errors: always
+    include-exception: true
+    include-message: always
+  port: ${ABC:10000}
+spring:
+  application:
+    name: ms-order
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 'all'
+      retries: 100
+      properties:
+        linger.ms: 10
+  config:
+    import: configserver:http://127.0.0.1:8888
+  cloud:
+    loadbalancer:
+      retry:
+        retry-on-all-operations: true
+        max-retries-on-next-service-instance: 3
+        enabled: true
+resilience4j:
+  retry:
+    instances:
+      ca-retry:
+        base-config: base1
+      ca-retry2:
+        base-config: base1
+        retry-exception-predicate: org.training.microservice.tc.msorder.integration.MyRetryExceptionHandler
+        result-predicate: org.training.microservice.tc.msorder.integration.MyResultHandler
+      ca-retry3:
+        base-config: base1
+    configs:
+      base1:
+        max-attempts: 2
+        wait-duration: 2ms
+        ignore-exceptions:
+          - java.lang.NullPointerException
+  circuitbreaker:
+    instances:
+      my-cb:
+        sliding-window-type: count_based
+        sliding-window-size: 20
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 2s
+        minimum-number-of-calls: 10
+        automatic-transition-from-open-to-half-open-enabled: false
+        permitted-number-of-calls-in-half-open-state: 10
+        slow-call-duration-threshold: 500ms
+        slow-call-rate-threshold: 50

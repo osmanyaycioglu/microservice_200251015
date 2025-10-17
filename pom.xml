@@ -12,6 +12,9 @@
 
   <modules>
     <module>configuration</module>
+    <module>discovery</module>
+    <module>ms-order</module>
+    <module>ms-customer-account</module>
   </modules>
 
   <properties>

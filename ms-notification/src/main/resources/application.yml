@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ms-notification
+  config:
+    import: configserver:http://127.0.0.1:8888
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 'ALL'
+      retries: 100
+      properties:
+        linger.ms: 10
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+server:
+  error:
+    include-binding-errors: always
+    include-exception: true
+    include-message: always
+  port: ${ABC:12000}

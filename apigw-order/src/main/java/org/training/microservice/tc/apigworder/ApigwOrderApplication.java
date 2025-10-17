@@ -1,19 +1,15 @@
-package org.training.microservice.tc.msorder;
+package org.training.microservice.tc.apigworder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableAspectJAutoProxy
-@EnableKafka
-public class MsOrderApplication {
+public class ApigwOrderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MsOrderApplication.class,
+        SpringApplication.run(ApigwOrderApplication.class,
                               args);
     }
 

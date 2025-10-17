@@ -3,6 +3,7 @@ package org.training.microservice.tc.msorder.input.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ import org.training.microservice.tc.msorder.services.OrderProcessService;
 public class OrderProcessRestController {
     private final OrderProcessService orderProcessService;
 
+    @Value("${server.port}")
+    private Integer localPort;
+
     //@RequestMapping(method = RequestMethod.POST,path = "/api/v1/order/process/place")
     @PostMapping("/place")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -39,7 +43,9 @@ public class OrderProcessRestController {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                              .header("xyz",
                                      "abc")
-                             .body(orderProcessService.place(IObjectMapper.OBJECT_MAPPER.toOrder(orderDtoParam)));
+                             .body(orderProcessService.place(IObjectMapper.OBJECT_MAPPER.toOrder(orderDtoParam))
+                                   + "--"
+                                   + localPort);
     }
 
     @GetMapping("/cancel")
